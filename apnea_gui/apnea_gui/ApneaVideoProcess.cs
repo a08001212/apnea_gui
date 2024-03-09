@@ -21,6 +21,7 @@ namespace apnea_gui
         private Rect chest_area;
         private Mat<int> mask;
         private double mask_count;
+        private List<double> SD;
         public ApneaVideoProcess(string video_path)
         {
             detector = new CascadeClassifier(@"..\..\haarcascades\haarcascade_frontalface_alt2.xml");
@@ -36,18 +37,20 @@ namespace apnea_gui
             }
 
             rr_rate = new List<double>();
+            SD = new List<double>();
             videoWidth = (int)videoCapture.Get(VideoCaptureProperties.FrameWidth);
             videoHeight = (int)videoCapture.Get(VideoCaptureProperties.FrameHeight);
 
             fps = videoCapture.Get(VideoCaptureProperties.Fps);
-            get_breath_data();
+            generate_breath_data();
+            generate_SD();
             videoCapture.Release();
         }
 
         void set_video_path(string video_path)
         {
             this.video_path = video_path;
-            get_breath_data();
+            generate_breath_data();
         }
 
         public void draw_data(List<Double> arr)
@@ -57,16 +60,24 @@ namespace apnea_gui
 
         public void write_to_csv(string filePath)
         {
-             string s = "";
-             rr_rate.ForEach(val => s += val.ToString() + ",");
-             var csv = new StringBuilder();
-             File.WriteAllText(filePath, s);
+            string s = ""; 
+            rr_rate.ForEach(val => s += val.ToString() + ",");
+            s += '\n';
+            SD.ForEach(val => s += val.ToString() + ',');
+            var csv = new StringBuilder();
+            File.WriteAllText(filePath, s);
         }
 
         public List<double> get_rr_rate()
         {
             return rr_rate;
         }
+
+        public List<double> get_SD()
+        {
+            return SD;
+        }
+        
         private Rect find_face(Mat<int> frame)
         {
 
@@ -112,7 +123,7 @@ namespace apnea_gui
             }
             return new Mat<int>(frame, chest_area);
         }
-        private void get_breath_data()
+        private void generate_breath_data()
         {
             rr_rate.Clear();
             double last_data = 0.0;
@@ -130,7 +141,7 @@ namespace apnea_gui
                         continue;
                     Mat<int> first_chest_img = get_chest_img(frame);
                     var super_pixel = SuperpixelSLIC.Create(first_chest_img, SLICType.SLICO, 150, 0.075F);
-                    super_pixel.Iterate(10);
+                    super_pixel.Iterate(100);
                     mask = new Mat<int>(first_chest_img.Height, first_chest_img.Width);
                     Mat<int> labels = new Mat<int>(super_pixel.GetNumberOfSuperpixels(), super_pixel.GetNumberOfSuperpixels());
                     super_pixel.EnforceLabelConnectivity(100);
@@ -140,7 +151,6 @@ namespace apnea_gui
 
                     first_frame = false;
                 }
-                double frame_gray_value;
                 Mat<int> chest_img = get_chest_img(frame);
 
                 // can't find chest
@@ -164,8 +174,32 @@ namespace apnea_gui
             {
                 rr_rate[i] -= rr_rate_average;
             }
-
         }
+
+        public void generate_SD()
+        {
+            int count, index = 0;
+            while (index < rr_rate.Count)
+            {
+                count = 0;
+                double sum = 0, ans = 0;
+                for (; count < (int)fps && index<rr_rate.Count; ++count, ++index)
+                {
+                    sum += rr_rate[index];
+                }
+                if(count == 0)  break;
+                double average = sum / count;
+                for (int i = index-count; i<index; ++i)
+                {
+                    ans += Math.Pow(rr_rate[i] - average, 2);
+                }
+
+                ans = Math.Sqrt(ans / count);
+                SD.Add(ans);
+            }
+            
+        }
+
         public double get_fps()
         {
             return fps;

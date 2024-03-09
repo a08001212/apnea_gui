@@ -15,7 +15,12 @@ namespace apnea_gui
     public partial class Form1 : Form
     {
         private void new_apnea_video_process_thread(){
+
+            label1.Invoke(new Action(() => label1.Text = @"分析中..."));
             video_process = new ApneaVideoProcess(video_file_path);
+
+            label1.Invoke(new Action(() => label1.Text = @"分析結束"));
+
         }
         private string video_file_path;
         private ApneaVideoProcess video_process;
@@ -26,19 +31,31 @@ namespace apnea_gui
 
         private void opeen_file_btn_click(object sender, EventArgs e)
         {
+            if (label1.Text == @"分析中...")
+            {
+                MessageBox.Show("其他影片正在分析中");
+                return;
+            }
             OpenFileDialog dlg = new OpenFileDialog();
             if (dlg.ShowDialog() != DialogResult.OK) return;
             video_file_path = dlg.FileName;
-            label1.Text = "分析中...";
             Thread thread1 = new Thread(new_apnea_video_process_thread);
             thread1.Start();
-            thread1.Join();
-            label1.Text = "分析結束";
+
+            // label1.Text = "分析中...";
+            // video_process = new ApneaVideoProcess(video_file_path);
+            // label1.Text = "分析結束";
 
         }
 
         private void save_to_csv_click(object sender, EventArgs e)
         {
+            //if (label1.Text != @"分析結束")
+            //{
+                //MessageBox.Show("請分析影片或等待影片分析結束");
+                //return;
+            //}
+
             OpenFileDialog dlg = new OpenFileDialog();
             if (dlg.ShowDialog() != DialogResult.OK) return;
             string save_file_name = dlg.FileName;
