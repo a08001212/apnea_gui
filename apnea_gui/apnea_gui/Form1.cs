@@ -14,7 +14,10 @@ namespace apnea_gui
 
     public partial class Form1 : Form
     {
-        private void new_apnea_video_process_thread(){
+        private Thread analyz_video;
+
+        private void new_apnea_video_process_thread()
+        {
 
             label1.Invoke(new Action(() => label1.Text = @"分析中..."));
             video_process = new ApneaVideoProcess(video_file_path);
@@ -31,7 +34,8 @@ namespace apnea_gui
 
         private void opeen_file_btn_click(object sender, EventArgs e)
         {
-            if (label1.Text == @"分析中...")
+            
+            if(analyz_video != null && analyz_video.ThreadState == ThreadState.Running)
             {
                 MessageBox.Show("其他影片正在分析中");
                 return;
@@ -39,22 +43,30 @@ namespace apnea_gui
             OpenFileDialog dlg = new OpenFileDialog();
             if (dlg.ShowDialog() != DialogResult.OK) return;
             video_file_path = dlg.FileName;
-            Thread thread1 = new Thread(new_apnea_video_process_thread);
-            thread1.Start();
-
-            // label1.Text = "分析中...";
-            // video_process = new ApneaVideoProcess(video_file_path);
-            // label1.Text = "分析結束";
-
+            analyz_video = new Thread(new_apnea_video_process_thread);
+            analyz_video.Start();
         }
 
         private void save_to_csv_click(object sender, EventArgs e)
         {
-            //if (label1.Text != @"分析結束")
-            //{
-                //MessageBox.Show("請分析影片或等待影片分析結束");
-                //return;
-            //}
+            //if (analyz_video.ThreadState == ThreadState.Running) {
+            //    MessageBox.Show("影片分析中");
+            //    return;
+            //}else if()
+            if (analyz_video == null) {
+                MessageBox.Show("請先選擇影片");
+                return;
+
+            }
+            switch (analyz_video.ThreadState)
+            {
+                case ThreadState.Running:
+                    MessageBox.Show("影片分析中");
+                    return;
+                case ThreadState.Unstarted:
+                    MessageBox.Show("請先選擇影片");
+                    return;
+            }
 
             OpenFileDialog dlg = new OpenFileDialog();
             if (dlg.ShowDialog() != DialogResult.OK) return;
