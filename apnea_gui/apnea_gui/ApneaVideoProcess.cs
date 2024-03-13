@@ -47,17 +47,30 @@ namespace apnea_gui
             videoCapture.Release();
         }
 
-        void set_video_path(string video_path)
+        public void set_video_path(string video_path)
         {
             this.video_path = video_path;
+            try
+            {
+                videoCapture = new VideoCapture(video_path);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+            rr_rate.Clear();
+            SD.Clear();
+            videoWidth = (int)videoCapture.Get(VideoCaptureProperties.FrameWidth);
+            videoHeight = (int)videoCapture.Get(VideoCaptureProperties.FrameHeight);
+
+            fps = videoCapture.Get(VideoCaptureProperties.Fps);
             generate_breath_data();
+            generate_SD();
+            videoCapture.Release();
         }
-
-        public void draw_data(List<Double> arr)
-        {
-            
-        }
-
+        
         public void write_to_csv(string filePath)
         {
             string s = ""; 
@@ -129,7 +142,7 @@ namespace apnea_gui
             double last_data = 0.0;
             Mat<int> frame = new Mat<int>(videoHeight, videoWidth);
             bool first_frame = true;
-            double rr_rate_sum = .0;
+            double rr_rate_sum;
             while (videoCapture.Read(frame))
             {
                 Cv2.CvtColor(frame, frame, ColorConversionCodes.RGB2GRAY);
@@ -161,14 +174,18 @@ namespace apnea_gui
                 }
                 Cv2.BitwiseAnd(chest_img, mask, chest_img);
                 var img_sum = Cv2.Sum(chest_img);
-                // show chest 
-                // Cv2.ImShow("test", chest_img);
-                // Cv2.WaitKey(1);
                 double ans = (double)img_sum[0] / mask_count;
                 rr_rate.Add(ans);
-                rr_rate_sum += ans;
+                
             }
 
+            // var filter = new MyIirFilter();
+            // // Assuming rr_rate is your input signal, apply the filter
+            // for (int i = 0; i < rr_rate.Count; i++)
+            // {
+            //     rr_rate[i] = filter.Filter(rr_rate[i]);
+            // }
+            rr_rate_sum = rr_rate.Sum();
             double rr_rate_average = rr_rate_sum / rr_rate.Count;
             for (int i = 0; i < rr_rate.Count; ++i)
             {
