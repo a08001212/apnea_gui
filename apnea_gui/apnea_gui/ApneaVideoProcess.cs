@@ -154,7 +154,7 @@ namespace apnea_gui
                         continue;
                     Mat<int> first_chest_img = get_chest_img(frame);
                     var super_pixel = SuperpixelSLIC.Create(first_chest_img, SLICType.SLICO, 150, 0.075F);
-                    super_pixel.Iterate(100);
+                    super_pixel.Iterate(500);
                     mask = new Mat<int>(first_chest_img.Height, first_chest_img.Width);
                     Mat<int> labels = new Mat<int>(super_pixel.GetNumberOfSuperpixels(), super_pixel.GetNumberOfSuperpixels());
                     super_pixel.EnforceLabelConnectivity(100);
@@ -179,12 +179,6 @@ namespace apnea_gui
                 
             }
 
-            // var filter = new MyIirFilter();
-            // // Assuming rr_rate is your input signal, apply the filter
-            // for (int i = 0; i < rr_rate.Count; i++)
-            // {
-            //     rr_rate[i] = filter.Filter(rr_rate[i]);
-            // }
             rr_rate_sum = rr_rate.Sum();
             double rr_rate_average = rr_rate_sum / rr_rate.Count;
             for (int i = 0; i < rr_rate.Count; ++i)

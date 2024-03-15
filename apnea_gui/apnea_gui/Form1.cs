@@ -19,13 +19,13 @@ namespace apnea_gui
         private string video_file_path;
         private ApneaVideoProcess video_process;
 
-        private Series draw_chart(string name, List<Double> data, int num_size) {
+        private Series draw_chart(string name, List<Double> data, int data_fps) {
             Series ret = new Series(name, data.Count + 1);
             ret.ChartType = SeriesChartType.Line;
             ret.IsValueShownAsLabel = false;
             for(int i = 0; i<data.Count; ++i)
             {
-                ret.Points.AddXY(i * num_size, data[i]);
+                ret.Points.AddXY(i * data_fps, data[i]);
             }
 
             return ret;
@@ -70,9 +70,10 @@ namespace apnea_gui
             OpenFileDialog dlg = new OpenFileDialog();
             if (dlg.ShowDialog() != DialogResult.OK) return;
             video_file_path = dlg.FileName;
-            
+
             analyz_video = new Thread(new_apnea_video_process_thread);
             analyz_video.Start();
+            
         }
 
         private void save_to_csv_click(object sender, EventArgs e)
@@ -92,7 +93,7 @@ namespace apnea_gui
                     return;
             }
 
-            OpenFileDialog dlg = new OpenFileDialog();
+            SaveFileDialog dlg = new SaveFileDialog();
             if (dlg.ShowDialog() != DialogResult.OK) return;
             string save_file_name = dlg.FileName;
             video_process.write_to_csv(save_file_name);

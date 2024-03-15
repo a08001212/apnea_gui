@@ -41,7 +41,7 @@ namespace apnea_gui
             // 
             // open_file_btn
             // 
-            this.open_file_btn.Location = new System.Drawing.Point(1349, 32);
+            this.open_file_btn.Location = new System.Drawing.Point(1780, 32);
             this.open_file_btn.Name = "open_file_btn";
             this.open_file_btn.Size = new System.Drawing.Size(128, 42);
             this.open_file_btn.TabIndex = 0;
@@ -52,7 +52,7 @@ namespace apnea_gui
             // button1
             // 
             this.button1.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.button1.Location = new System.Drawing.Point(1349, 126);
+            this.button1.Location = new System.Drawing.Point(1780, 126);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(128, 42);
             this.button1.TabIndex = 1;
@@ -64,7 +64,7 @@ namespace apnea_gui
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("新細明體", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label1.Location = new System.Drawing.Point(12, 634);
+            this.label1.Location = new System.Drawing.Point(62, 690);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(130, 24);
             this.label1.TabIndex = 2;
@@ -78,13 +78,13 @@ namespace apnea_gui
             this.rr_rate_chart.ChartAreas.Add(chartArea1);
             legend1.Name = "Legend1";
             this.rr_rate_chart.Legends.Add(legend1);
-            this.rr_rate_chart.Location = new System.Drawing.Point(49, 32);
+            this.rr_rate_chart.Location = new System.Drawing.Point(12, 12);
             this.rr_rate_chart.Name = "rr_rate_chart";
             series1.ChartArea = "ChartArea1";
             series1.Legend = "Legend1";
             series1.Name = "Series1";
             this.rr_rate_chart.Series.Add(series1);
-            this.rr_rate_chart.Size = new System.Drawing.Size(1212, 577);
+            this.rr_rate_chart.Size = new System.Drawing.Size(1670, 664);
             this.rr_rate_chart.TabIndex = 3;
             this.rr_rate_chart.Text = "chart1";
             // 
@@ -92,7 +92,7 @@ namespace apnea_gui
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1489, 667);
+            this.ClientSize = new System.Drawing.Size(1920, 900);
             this.Controls.Add(this.rr_rate_chart);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button1);
@@ -102,6 +102,7 @@ namespace apnea_gui
             ((System.ComponentModel.ISupportInitialize)(this.rr_rate_chart)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         private System.Windows.Forms.Button open_file_btn;
