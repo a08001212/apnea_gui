@@ -9,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
-
+ 
 namespace apnea_gui
 {
 
@@ -19,13 +19,13 @@ namespace apnea_gui
         private string video_file_path;
         private ApneaVideoProcess video_process;
 
-        private Series draw_chart(string name, List<Double> data, int data_fps) {
+        private Series draw_chart(string name, List<Double> data, int fps) {
             Series ret = new Series(name, data.Count + 1);
             ret.ChartType = SeriesChartType.Line;
             ret.IsValueShownAsLabel = false;
-            for(int i = 0; i<data.Count; ++i)
+            for(int i = 0 / fps; i<data.Count; ++i)
             {
-                ret.Points.AddXY(i * data_fps, data[i]);
+                ret.Points.AddXY((double)i / fps, data[i]);
             }
 
             return ret;
@@ -36,8 +36,8 @@ namespace apnea_gui
             video_process = new ApneaVideoProcess(video_file_path);
             label1.Invoke(new Action(() => label1.Text = @"分析結束"));
             // draw chart
-            Series rr_rate_line = draw_chart("呼吸頻率", video_process.get_rr_rate(), 1);
-            Series SD_line = draw_chart("標準差", video_process.get_SD(), (int)video_process.get_fps());
+            Series rr_rate_line = draw_chart("呼吸頻率", video_process.get_rr_rate(), (int)video_process.get_fps());
+            Series SD_line = draw_chart("標準差", video_process.get_SD(), 1);
             rr_rate_chart.Invoke(new Action(() =>
             {
                 // clear data

@@ -9,7 +9,7 @@
     {
         // Coefficients for the Butterworth Bandpass filter
         // Replace these with your own coefficients
-        a = new double[] { 1.0, -1.14298, 0.4128 };
+        a = new double[] { 1.0, -1.04298, 0.8128 };
         b = new double[] { 0.2062, 0, -0.2062 };
         bufferX = new double[a.Length];
         bufferY = new double[b.Length];

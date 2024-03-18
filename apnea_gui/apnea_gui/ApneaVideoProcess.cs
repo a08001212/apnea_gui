@@ -185,8 +185,23 @@ namespace apnea_gui
             {
                 rr_rate[i] -= rr_rate_average;
             }
-        }
+            Filter(rr_rate, (int)fps*10);
 
+        }
+        public  void Filter(List<double> data, int windowSize)
+        {
+            List<double> result = new List<double>();
+
+            for (int i = 0; i < data.Count; i++)
+            {
+                int start = Math.Max(0, i - windowSize + 1);
+                int end = i + 1;
+                
+                data[i] -= data.Skip(start).Take(end - start).Average();
+
+            }
+            
+        }
         public void generate_SD()
         {
             int count, index = 0;
