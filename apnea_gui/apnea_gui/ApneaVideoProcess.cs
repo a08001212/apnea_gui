@@ -71,14 +71,24 @@ namespace apnea_gui
             videoCapture.Release();
         }
         
-        public void write_to_csv(string filePath)
+        public bool write_to_csv(string filePath)
         {
             string s = ""; 
             rr_rate.ForEach(val => s += val.ToString() + ",");
             s += '\n';
             SD.ForEach(val => s += val.ToString() + ',');
-            var csv = new StringBuilder();
-            File.WriteAllText(filePath, s);
+            // var csv = new StringBuilder();
+            try
+            {
+                File.WriteAllText(filePath, s);
+            }
+            catch (IOException err)
+            {
+                Console.WriteLine(err);
+                return false;
+            }
+
+            return true;
         }
 
         public List<double> get_rr_rate()
@@ -93,7 +103,6 @@ namespace apnea_gui
         
         private Rect find_face(Mat<int> frame)
         {
-
             var faces = detector.DetectMultiScale(frame, 1.1, 3);
             if (faces.Length == 0)
             {
@@ -176,8 +185,8 @@ namespace apnea_gui
                 var img_sum = Cv2.Sum(chest_img);
                 double ans = (double)img_sum[0] / mask_count;
                 rr_rate.Add(ans);
-                
             }
+            Filter(rr_rate, (int)fps*10);
 
             rr_rate_sum = rr_rate.Sum();
             double rr_rate_average = rr_rate_sum / rr_rate.Count;
@@ -185,7 +194,7 @@ namespace apnea_gui
             {
                 rr_rate[i] -= rr_rate_average;
             }
-            Filter(rr_rate, (int)fps*10);
+            Filter(rr_rate, (int)fps);
 
         }
         public  void Filter(List<double> data, int windowSize)
@@ -223,7 +232,6 @@ namespace apnea_gui
                 ans = Math.Sqrt(ans / count);
                 SD.Add(ans);
             }
-            
         }
 
         public double get_fps()
@@ -231,5 +239,6 @@ namespace apnea_gui
             return fps;
         }
 
+        
     }
 }

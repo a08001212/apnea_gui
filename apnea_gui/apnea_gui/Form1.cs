@@ -42,17 +42,21 @@ namespace apnea_gui
             {
                 // clear data
                 while (rr_rate_chart.Series.Count > 0) { rr_rate_chart.Series.RemoveAt(0); }
-                rr_rate_chart.ChartAreas[0].AxisY.Minimum = video_process.get_rr_rate().Min();
-                rr_rate_chart.ChartAreas[0].AxisY.Maximum = video_process.get_rr_rate().Max();
+//                rr_rate_chart.ChartAreas[0].AxisY.Minimum = video_process.get_rr_rate().Min();
+//                rr_rate_chart.ChartAreas[0].AxisY.Maximum = video_process.get_rr_rate().Max();
+                rr_rate_chart.ChartAreas[0].AxisY.Maximum = 0.08;
+                rr_rate_chart.ChartAreas[0].AxisY.Minimum = -0.08;
                 rr_rate_chart.Series.Add(rr_rate_line);
                 rr_rate_chart.Series.Add(SD_line);
             }));
+
         }
         public Form1()
         {
             InitializeComponent();
             rr_rate_chart.Titles.Add("呼吸頻率");
-
+            comList.Items.Add("COM3");
+            comList.Items.Add("COM5");
         }
 
         private void open_file_btn_click(object sender, EventArgs e)
@@ -67,6 +71,7 @@ namespace apnea_gui
             {
                 analyz_video.Abort();
             }
+            video_process = null;
             OpenFileDialog dlg = new OpenFileDialog();
             if (dlg.ShowDialog() != DialogResult.OK) return;
             video_file_path = dlg.FileName;
@@ -96,7 +101,12 @@ namespace apnea_gui
             SaveFileDialog dlg = new SaveFileDialog();
             if (dlg.ShowDialog() != DialogResult.OK) return;
             string save_file_name = dlg.FileName;
-            video_process.write_to_csv(save_file_name);
+            if (!video_process.write_to_csv(save_file_name))
+            {
+                MessageBox.Show("Can't save to csv file.");
+                return;
+            }
+
             label1.Text = $"儲存至 \"{save_file_name}\" ";
         }
     }

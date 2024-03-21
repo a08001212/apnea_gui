@@ -36,23 +36,26 @@ namespace apnea_gui
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.rr_rate_chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.comList = new System.Windows.Forms.ComboBox();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.rr_rate_chart)).BeginInit();
             this.SuspendLayout();
             // 
             // open_file_btn
             // 
-            this.open_file_btn.Location = new System.Drawing.Point(1780, 32);
+            this.open_file_btn.Location = new System.Drawing.Point(1716, 259);
             this.open_file_btn.Name = "open_file_btn";
             this.open_file_btn.Size = new System.Drawing.Size(128, 42);
             this.open_file_btn.TabIndex = 0;
-            this.open_file_btn.Text = "Load File";
+            this.open_file_btn.Text = "載入影片";
             this.open_file_btn.UseVisualStyleBackColor = true;
             this.open_file_btn.Click += new System.EventHandler(this.open_file_btn_click);
             // 
             // button1
             // 
             this.button1.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.button1.Location = new System.Drawing.Point(1780, 126);
+            this.button1.Location = new System.Drawing.Point(1716, 326);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(128, 42);
             this.button1.TabIndex = 1;
@@ -88,11 +91,42 @@ namespace apnea_gui
             this.rr_rate_chart.TabIndex = 3;
             this.rr_rate_chart.Text = "chart1";
             // 
+            // comList
+            // 
+            this.comList.FormattingEnabled = true;
+            this.comList.Location = new System.Drawing.Point(1715, 75);
+            this.comList.Name = "comList";
+            this.comList.Size = new System.Drawing.Size(129, 20);
+            this.comList.TabIndex = 4;
+            this.comList.Text = "無";
+            // 
+            // button2
+            // 
+            this.button2.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.button2.Location = new System.Drawing.Point(1716, 184);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(128, 42);
+            this.button2.TabIndex = 6;
+            this.button2.Text = "停止錄影";
+            this.button2.UseVisualStyleBackColor = true;
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(1716, 117);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(128, 42);
+            this.button3.TabIndex = 5;
+            this.button3.Text = "開始錄影";
+            this.button3.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1920, 900);
+            this.Controls.Add(this.button2);
+            this.Controls.Add(this.button3);
+            this.Controls.Add(this.comList);
             this.Controls.Add(this.rr_rate_chart);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button1);
@@ -102,8 +136,12 @@ namespace apnea_gui
             ((System.ComponentModel.ISupportInitialize)(this.rr_rate_chart)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
+
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button3;
+
+        private System.Windows.Forms.ComboBox comList;
 
         private System.Windows.Forms.Button open_file_btn;
 
