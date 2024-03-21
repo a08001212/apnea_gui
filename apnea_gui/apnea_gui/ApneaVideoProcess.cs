@@ -7,11 +7,13 @@ using System.Collections;
 using OpenCvSharp;
 using OpenCvSharp.XImgProc;
 using System.IO;
+using System.Numerics;
 
 namespace apnea_gui
 {
     class ApneaVideoProcess
     {
+        private List<int[]> apnea_time; 
         private string video_path;
         private double fps;
         private int videoWidth, videoHeight;
@@ -22,6 +24,7 @@ namespace apnea_gui
         private Mat<int> mask;
         private double mask_count;
         private List<double> SD;
+        public const double threshold = 0.008;
         public ApneaVideoProcess(string video_path)
         {
             detector = new CascadeClassifier(@"..\..\haarcascades\haarcascade_frontalface_alt2.xml");
@@ -43,8 +46,9 @@ namespace apnea_gui
 
             fps = videoCapture.Get(VideoCaptureProperties.Fps);
             generate_breath_data();
-            generate_SD();
             videoCapture.Release();
+            generate_SD();
+            apnea_times();
         }
 
         public void set_video_path(string video_path)
@@ -186,7 +190,7 @@ namespace apnea_gui
                 double ans = (double)img_sum[0] / mask_count;
                 rr_rate.Add(ans);
             }
-            Filter(rr_rate, (int)fps*10);
+            Filter(rr_rate, (int)fps*5);
 
             rr_rate_sum = rr_rate.Sum();
             double rr_rate_average = rr_rate_sum / rr_rate.Count;
@@ -194,13 +198,15 @@ namespace apnea_gui
             {
                 rr_rate[i] -= rr_rate_average;
             }
-            Filter(rr_rate, (int)fps);
-
+            // Filter(rr_rate, (int)fps);
         }
+        public int get_apnea_times()
+        {
+            return apnea_time.Count;
+        }
+
         public  void Filter(List<double> data, int windowSize)
         {
-            List<double> result = new List<double>();
-
             for (int i = 0; i < data.Count; i++)
             {
                 int start = Math.Max(0, i - windowSize + 1);
@@ -208,8 +214,7 @@ namespace apnea_gui
                 
                 data[i] -= data.Skip(start).Take(end - start).Average();
 
-            }
-            
+            }        
         }
         public void generate_SD()
         {
@@ -234,6 +239,23 @@ namespace apnea_gui
             }
         }
 
+        private void apnea_times()
+        {
+            apnea_time = new List<int[]>();
+            for (var i = 0; i < SD.Count; ++i)
+            {
+                if(SD[i] > threshold)   continue;
+                int j = i + 1;
+                while (j < SD.Count)
+                {
+                    if(SD[j] > threshold)   break;
+                    j += 1;
+                }
+                if(j-i < 10)    continue;
+                apnea_time.Add(new int[2]{i, j-i});
+                i = j;
+            }
+        }
         public double get_fps()
         {
             return fps;

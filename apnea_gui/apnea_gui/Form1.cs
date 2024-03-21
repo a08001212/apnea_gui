@@ -34,7 +34,10 @@ namespace apnea_gui
         {
             label1.Invoke(new Action(() => label1.Text = @"分析中..."));
             video_process = new ApneaVideoProcess(video_file_path);
-            label1.Invoke(new Action(() => label1.Text = @"分析結束"));
+            label1.Invoke(new Action(() =>
+            {
+                label1.Text = $"分析結束\n共呼吸暫停 {video_process.get_apnea_times()} 次";
+            }));
             // draw chart
             Series rr_rate_line = draw_chart("呼吸頻率", video_process.get_rr_rate(), (int)video_process.get_fps());
             Series SD_line = draw_chart("標準差", video_process.get_SD(), 1);
@@ -42,8 +45,6 @@ namespace apnea_gui
             {
                 // clear data
                 while (rr_rate_chart.Series.Count > 0) { rr_rate_chart.Series.RemoveAt(0); }
-//                rr_rate_chart.ChartAreas[0].AxisY.Minimum = video_process.get_rr_rate().Min();
-//                rr_rate_chart.ChartAreas[0].AxisY.Maximum = video_process.get_rr_rate().Max();
                 rr_rate_chart.ChartAreas[0].AxisY.Maximum = 0.08;
                 rr_rate_chart.ChartAreas[0].AxisY.Minimum = -0.08;
                 rr_rate_chart.Series.Add(rr_rate_line);
