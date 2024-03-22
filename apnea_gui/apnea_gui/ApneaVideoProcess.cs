@@ -166,7 +166,7 @@ namespace apnea_gui
                     if (chest_area.X == -1)
                         continue;
                     Mat<int> first_chest_img = get_chest_img(frame);
-                    var super_pixel = SuperpixelSLIC.Create(first_chest_img, SLICType.SLICO, 150, 0.075F);
+                    var super_pixel = SuperpixelSLIC.Create(first_chest_img, SLICType.SLICO, 100, 0.075F);
                     super_pixel.Iterate(500);
                     mask = new Mat<int>(first_chest_img.Height, first_chest_img.Width);
                     Mat<int> labels = new Mat<int>(super_pixel.GetNumberOfSuperpixels(), super_pixel.GetNumberOfSuperpixels());

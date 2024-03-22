@@ -45,8 +45,9 @@ namespace apnea_gui
             {
                 // clear data
                 while (rr_rate_chart.Series.Count > 0) { rr_rate_chart.Series.RemoveAt(0); }
-                rr_rate_chart.ChartAreas[0].AxisY.Maximum = 0.08;
-                rr_rate_chart.ChartAreas[0].AxisY.Minimum = -0.08;
+                rr_rate_chart.ChartAreas[0].AxisY.Maximum = 0.05;
+                rr_rate_chart.ChartAreas[0].AxisY.Minimum = -0.05;
+                rr_rate_chart.ChartAreas[0].AxisX.Title = "Times (S)";
                 rr_rate_chart.Series.Add(rr_rate_line);
                 rr_rate_chart.Series.Add(SD_line);
             }));
