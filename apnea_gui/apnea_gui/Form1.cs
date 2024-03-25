@@ -19,10 +19,16 @@ namespace apnea_gui
         private string video_file_path;
         private ApneaVideoProcess video_process;
 
-        private Series draw_chart(string name, List<Double> data, int fps) {
-            Series ret = new Series(name, data.Count + 1);
+        private Series draw_chart(string name, List<Double> data, int fps)
+        {
+            
+            // Series ret = new Series(name, data.Count + 1);
+            Series ret = new Series();
+            
+            // ret.LabelBorderDashStyle =  new Font("Times New Roman", 12, System.Drawing.FontStyle.Regular);
             ret.ChartType = SeriesChartType.Line;
             ret.IsValueShownAsLabel = false;
+            ret.Name = name;
             for(int i = 0 / fps; i<data.Count; ++i)
             {
                 ret.Points.AddXY((double)i / fps, data[i]);
@@ -36,19 +42,27 @@ namespace apnea_gui
             video_process = new ApneaVideoProcess(video_file_path);
             label1.Invoke(new Action(() =>
             {
-                label1.Text = $"分析結束\n共呼吸暫停 {video_process.get_apnea_times()} 次";
+                label1.Text = $"Analysis ends\n\n共呼吸暫停 {video_process.get_apnea_times()} 次";
             }));
             // draw chart
-            Series rr_rate_line = draw_chart("呼吸頻率", video_process.get_rr_rate(), (int)video_process.get_fps());
-            Series SD_line = draw_chart("標準差", video_process.get_SD(), 1);
+            Series rr_rate_line = draw_chart("Respiratory Signal", video_process.get_rr_rate(), (int)video_process.get_fps());
+            Series SD_line = draw_chart("standard deviation (SD)", video_process.get_SD(), 1);
             rr_rate_chart.Invoke(new Action(() =>
             {
                 // clear data
                 while (rr_rate_chart.Series.Count > 0) { rr_rate_chart.Series.RemoveAt(0); }
                 rr_rate_chart.ChartAreas[0].AxisY.Maximum = 0.05;
                 rr_rate_chart.ChartAreas[0].AxisY.Minimum = -0.05;
+                rr_rate_chart.ChartAreas[0].AxisY.TitleFont =
+                    new Font("Microsoft Sans Serif", 18, System.Drawing.FontStyle.Bold);
+                rr_rate_chart.ChartAreas[0].AxisX.TitleFont =
+                    new Font("Microsoft Sans Serif", 18, System.Drawing.FontStyle.Bold);
+                rr_rate_chart.ChartAreas[0].AxisX.LabelStyle.Font = new Font("Microsoft Sans Serif", 18, System.Drawing.FontStyle.Regular);
+                rr_rate_chart.ChartAreas[0].AxisY.LabelStyle.Font = new Font("Microsoft Sans Serif", 18, System.Drawing.FontStyle.Regular);
+                
                 rr_rate_chart.ChartAreas[0].AxisX.Title = "Times (S)";
                 rr_rate_chart.ChartAreas[0].AxisY.Title = "Average Grayscale";
+                rr_rate_line.Font = new Font("Microsoft Sans Serif", 18, System.Drawing.FontStyle.Bold);
                 rr_rate_chart.Series.Add(rr_rate_line);
                 rr_rate_chart.Series.Add(SD_line);
             }));
@@ -57,7 +71,10 @@ namespace apnea_gui
         public Form1()
         {
             InitializeComponent();
-            rr_rate_chart.Titles.Add("呼吸頻率");
+            Title rr_rate_title = new Title();
+            rr_rate_title.Font = new Font("Arial", 12, System.Drawing.FontStyle.Regular);
+            rr_rate_title.Text = "Respiratory Signal";
+            rr_rate_chart.Titles.Add(rr_rate_title);
             comList.Items.Add("COM3");
             comList.Items.Add("COM5");
         }
