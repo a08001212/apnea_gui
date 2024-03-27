@@ -22,4 +22,4 @@ C:\Users\USER\test\apnea_gui\apnea_gui\apnea_gui\bin\Debug\System.Buffers.xml
 C:\Users\USER\test\apnea_gui\apnea_gui\apnea_gui\bin\Debug\System.Memory.xml
 C:\Users\USER\test\apnea_gui\apnea_gui\apnea_gui\bin\Debug\System.Numerics.Vectors.xml
 C:\Users\USER\test\apnea_gui\apnea_gui\apnea_gui\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
-C:\Users\USER\test\apnea_gui\apnea_gui\apnea_gui\obj\Debug\apnea_gui.csproj.CopyComplete
+C:\Users\USER\test\apnea_gui\apnea_gui\apnea_gui\obj\Debug\apnea_gui.csproj.Up2Date
